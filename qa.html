@@ -1,0 +1,256 @@
+<h2> Exam question <a name="Q_and_A">Q and A</a></h2>
+<h3>2009</h3>
+<p><tt>&nbsp;On Wed, 27 May 2009, xxx wrote:<br>
+&nbsp;&gt; I just wanted to clear up some information about the 2 layer branch<br>
+&nbsp;&gt; prediction used in pentium processors. You say in the answer to the 2008<br>
+&nbsp;&gt; paper that each prediction line in the cache contains the branch target, 
+4<br>
+&nbsp;&gt; bit history and 16 2 bit saturating counters. From Two-Level Adaptive<br>
+&nbsp;&gt; Training Branch Prediction paper i got the picture that the 2 layer 
+system<br>
+&nbsp;&gt; uses 16 global 2 bit saturating counters which are shared by each of the<br>
+&nbsp;&gt; prediction lines. Is it the case the the pentium uses a slightly 
+different<br>
+&nbsp;&gt; approach where each prediction line has its own exclusive set of two bit<br>
+&nbsp;&gt; saturating counters or have i misinterpreted your answers?<br>
+&nbsp;See:
+&nbsp;<a href="http://www.academic.marist.edu/jte/architecture/Projects/TheIntelPentiumProcessor.ppt">http://www.academic.marist.edu/jte/architecture/Projects/TheIntelPentiumProcessor.ppt</a> <br>
+&nbsp;The Pentium does not use the 2 layer algorithm; it just uses a broken<br>
+&nbsp;saturating counter. In the later processors, there is a set of 2-bit<br>
+&nbsp;saturating counters per history buffer.</tt></p>
+<p><tt>On Mon, 1 Jun 2009, xxx wrote:<br>
+&nbsp;&gt; In regard to ELEC3020:<br>
+&nbsp;&gt; 1. In the question 5 in 2007/08 paper, are required to reuse the 
+registers<br>
+&nbsp;&gt; or can we take advantage of having 32 of them?<br>
+&nbsp;You can use all of them.<br>
+&nbsp;<br>
+&nbsp;&gt; 2. (same question) To what extend do you require the knowledge of RISC<br>
+&nbsp;&gt; assembler? I mean, I have personally never programmed in assembler, but 
+can<br>
+&nbsp;&gt; more or less understand the code. Do you expect a proper assembler code 
+or<br>
+&nbsp;&gt; is assembler-like just fine?<br>
+&nbsp;Assembler-like is fine, but you should know that most instructions are<br>
+&nbsp;three-register, with only simple addressing modes.<br>
+&nbsp;<br>
+&nbsp;&gt; 3. In question 2 in 2004/05 paper, what is meant by the &quot;strength<br>
+&nbsp;&gt; reduction&quot;?<br>
+&nbsp;Eliminating multiplications from loops by replacing them with adds. For<br>
+&nbsp;example, the optimisation of<br>
+&nbsp;&nbsp; int p[10];<br>
+&nbsp;&nbsp; { int i;<br>
+&nbsp;&nbsp;&nbsp;&nbsp; for (i=0; i&lt;10; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; p[i]= 1; }<br>
+&nbsp;into<br>
+&nbsp;&nbsp; int p[10];<br>
+&nbsp;&nbsp; { int j;<br>
+&nbsp;&nbsp;&nbsp;&nbsp; for (j=0; j&lt;10*sizeof(int); j+=sizeof(int))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (int)(*((char*)p+j)) = 1; }<br>
+&nbsp;<br>
+&nbsp;&gt; 4. Some papers from the previous years mention ARM architecture, which 
+as<br>
+&nbsp;&gt; far as I remember wasn&#39;t covered this year. Is it safe to assume these 
+will<br>
+&nbsp;&gt; not appear this year?<br>
+&nbsp;No, it is not safe.<br>
+</tt><br>
+<tt>On Mon, 1 Jun 2009, xxx wrote:<br>
+&nbsp;&gt; Hello _Dr_ Nicole,<br>
+&nbsp;&gt; I have noticed in 2005 you have asked a question on fat trees. There is<br>
+&nbsp;&gt; minimal information in the lecture slides regarding these. I was 
+wondering<br>
+&nbsp;&gt; how you go about drawing a fat tree. I appreciate it is near to the exam<br>
+&nbsp;&gt; but is it possible to have a brief meeting regarding this question?<br>
+&nbsp;I drew them in lectures; here are a couple of pictures:<br>
+&nbsp;<a href="http://www.eli.sdsu.edu/courses/spring96/cs662/notes/networks/networks11.GIF">http://www.eli.sdsu.edu/courses/spring96/cs662/notes/networks/networks11.GIF</a>
+<br>
+&nbsp;<a href="http://www.cs.utk.edu/~patel/fat_tree.gif">http://www.cs.utk.edu/~patel/fat_tree.gif</a> </tt>
+<br>
+&nbsp;</p>
+<h3>2008</h3>
+<p>&gt; hi, i am having difficulties with question 3 b, past paper 06/07. i<br>
+&gt; do not follow how you have calculated the average distance for the<br>
+&gt; hypercube or the 2 D grid. Could you please advise on how you did<br>
+&gt; these calculations.</p>
+<blockquote>
+	<p>We include the (zero) distance between a processor and itself. Then for a 
+	1D<br>
+	grid, the distance between nodes i and j (i, j in 1...32) is |i-j|.<br>
+	<br>
+	So we calculate sum(i=1...32) { sum(j=1...32) |i-j| } and divide by 32*32.<br>
+	<br>
+	Then for the 2D grid, the average is exactly doubled, as we route on each<br>
+	axis.</p>
+</blockquote>
+<p>&gt; &quot;aliasing occures only when caches are not fully associative&quot;<br>
+&gt; Surely aliasing could occure even then but is very unlikely? For example<br>
+&gt; if the cache is very small cf main memory and all the current cache<br>
+&gt; locations are full with (what currently appears to be timely) valid data<br>
+&gt; then in order to insert a new memory line into the cache some<br>
+&gt; replacement scheme must eject an old line: causing aliasing. Or am I<br>
+&gt; missing something more sublte in the definition, along the lines of<br>
+&gt; &quot;expected in x of y-possible locations but not found&quot; which I can not<br>
+&gt; yet quite understand/explain.</p>
+<blockquote>
+	<p>It&#39;s not usually called aliasing in this situation. It would certainly be<br>
+	called thrashing if this was happening repeatedly, but that would typically<br>
+	only arise ion the context of large &quot;vector&quot; calculations that had not been<br>
+	&quot;strip mined&quot; to allow reuse of data blocks that fit within the cache.</p>
+</blockquote>
+<p>&gt; Do we need to know about Erle Transparent Latches?</p>
+<blockquote>
+	<p>I have not covered them in lectures; I think they&#39;re a bit old-fashioned<br>
+	nowadays.</p>
+</blockquote>
+<p>&gt; &quot;Using appropriate techniques determine the degree of Algorithmic<br>
+&gt; Parallelism...&quot;<br>
+&gt; Is an appropriate technique a data dependency diagram as used in<br>
+&gt; compiler dependency analysis/register renaming etc?<br>
+&gt; At current I break everything down into assembly code register level<br>
+&gt; operations then draw a cycle based dependecy diagram.</p>
+<blockquote>
+	<p>My lecture notes show a data-dependency diagram.</p>
+</blockquote>
+<p>&gt; What is your/where can I find a suitable definition of, &#39;Algorithmic<br>
+&gt; Parallelism&#39;? I cannot find the answer in your notes.</p>
+<blockquote>
+	<p>It is the converse of data parallelism. In data parallelism, all nodes 
+	run the<br>
+	same code but have different regions of the data. In algorithmic 
+	parallelism,<br>
+	different nodes run different parts of the code and the data flows past 
+	them.</p>
+</blockquote>
+<p>&gt; Following a process of partitioning a complex term into single assignment,<br>
+&gt; single-operator instructions, is it the maximum number of;<br>
+&gt; a) simulatanious executions that can occur given an unlimited number of<br>
+&gt; function units. (assuming you allow for the possibility of many functional<br>
+&gt; units of the same type)<br>
+&gt; b) the number of different types of operation that can occure simultaneously<br>
+&gt; c) something else i have not thought of?</p>
+<blockquote>
+	<p>It&#39;s a).</p>
+</blockquote>
+<p>&gt; &quot;...number of cycle required to execute it[code below in next Q]&quot;<br>
+&gt; Are we expected to allow for load operations or can we assume all<br>
+&gt; variables are already loaded into registers?</p>
+<blockquote>
+	<p>Allow for loads, unless you are told operands are in registers.</p>
+</blockquote>
+<p>&gt; If allowing for load operations then obviously only one load can occure<br>
+&gt; at a time, as we&#39;ve been told nothing about intelligent fetching<br>
+&gt; possibilities or multiple pipelines or VLIW routes/r???s/paths.</p>
+<blockquote>
+	<p>There&#39;s no reason not to have a multi-ported L1 cache, allowing multiple<br>
+	loads.</p>
+</blockquote>
+<p>&gt; Given the below code and told we are allowed to perform instruction<br>
+&gt; re-ordering, I assume the layout of the second and third lines is to get<br>
+&gt; us thinking two high level and trying to order code rather than specific<br>
+&gt; instructions. Ultimately then, I guess my question is: if I were trying<br>
+&gt; to understand the code below, would I be expected to conclude that the<br>
+&gt; initial value of Q is uninitialised/unknown?<br>
+&gt; P = (X + Y) *(X – Y);<br>
+&gt; T = P + Q;<br>
+&gt; Q = Z – W;</p>
+<blockquote>
+	<p>No. like X, Y, Z and W it is passed in from an outer context.</p>
+</blockquote>
+<p>&gt; Are there any more example answers for papers other than last year that<br>
+&gt; you willingly publish? The ECS CD-ROM does not appear to include any<br>
+&gt; (nor the website) and having answered the papers I find it<br>
+&gt; frustrating not being able to check them (my argument is that if people<br>
+&gt; revise lazily in the &quot;I&#39;ll look at the answers first&quot; system then that&#39;s<br>
+&gt; their fault for fooling themselves it works!)?</p>
+<blockquote>
+	<p>As I understand it, current ECS policy is to publish only one year&#39;s 
+	answers.</p>
+</blockquote>
+<p>&gt; To confirm, a non-unified cache is not the opposite of a two-level<br>
+&gt; cache?</p>
+<blockquote>
+	<p>Indeed not. L1, L2, L3 describe typically bigger and slower caches in a 
+	nested<br>
+	structure with L1 nearest the CPU and L3 nearest the DRAM.</p>
+</blockquote>
+<p>&gt; Hence you can have a non-unified L1 cache but a unified L2 cache<br>
+&gt; as described similiarly for the P4 I believe? What might a L3 cache be<br>
+&gt; useful for?</p>
+<blockquote>
+	<p>It&#39;s very common. Split data/instruction caches are used at L1 mainly to<br>
+	reduce the number of ports.</p>
+</blockquote>
+<p>&gt; What would be a good architecture for a modern processor performing<br>
+&gt; linear algebra/large matrices?</p>
+<blockquote>
+	<p>Vector or, nowadays, big L3 caches driving multi-banked DRAM so the<br>
+	calculation can be &quot;strip-mined&quot;</p>
+</blockquote>
+<p>&gt; Because of its use are we expected to imply that such processors a<br>
+&gt; likely to work alongside others in a parallel computing arrangement?</p>
+<blockquote>
+	<p>Yes, at the outermost level, most &quot;big iron&quot; is MIMD parallel.</p>
+</blockquote>
+<p>&gt; Not really a big issue but your calculation of the avarage clock<br>
+&gt; cycles per instructions is written as:<br>
+&gt; 1 + f * (1 - p) * c<br>
+&gt;<br>
+&gt; where f is the fraction of branch instructions in code, p the<br>
+&gt; probability of an accurate branch prediction and c the cycles<br>
+&gt; expended due to inaccurate predictions.<br>
+&gt;<br>
+&gt; Shouldn&#39;t it be<br>
+&gt;<br>
+&gt; (1 - f) * (f * p) * 1 + f * (1 - p) * c<br>
+&gt;<br>
+&gt; instead, where the extra terms (1 - f) and (f * p) denotes the<br>
+&gt; weighting for instructions taking 1 cycles just like the f * (1 - p)<br>
+&gt; term weighs the instructions due to wrong predictions ?<br>
+&gt;<br>
+&gt; Also, I hope that a lack of mathematical correctness don&#39;t affect<br>
+&gt; marks too much when using the maths simply to demonstrate a point.</p>
+<blockquote>
+	<p>No, it should be:<br>
+	<br>
+	(1 - f) + (f * p) * 1 + f * (1 - p) * (c + 1)&nbsp; =&nbsp; 1 + f * (1 - p) 
+	* c<br>
+	<br>
+	because a missed branch incurs c in addition to the usual 1 cycle.<br>
+	Thus my formula is correct.</p>
+</blockquote>
+<p>&gt; I cannot find much on SSE and SSE2 and the links you link to are broken<br>
+&gt; hence I have resorted to wikipedia which is great for an overview.</p>
+<blockquote>
+	<p>Fixed.</p>
+</blockquote>
+<p>&gt; HEP and Tera talks about multi-threading - do really mean instruction<br>
+&gt; re-ordering and injection between multiple unrelated processes/threads, or<br>
+&gt; do they mean instruction re-ordering&gt; If the former then the basic concept<br>
+&gt; is older than I thought.</p>
+<blockquote>
+	<p>No. The separate threads are designed at compile time. This the HEP ran<br>
+	FORTRAN with an additional CREATE statement which spawns a subroutine as a 
+	new<br>
+	thread. The Tera MTS also used FORTRAN as well as C and C++; its compiler<br>
+	could split DO (for) loops into separate threads, sometimes assisted by<br>
+	#pragma statements.</p>
+</blockquote>
+<p>&gt; Lastly, unexaminable yes but we&#39;ve never in all our years covered what<br>
+&gt; happens during a context switch! Where do all the registered get &#39;shadowed<br>
+&gt; to&#39;, what happens if you recurrse too deep, are these pumped to memory!!?<br>
+&gt; Will compiler perform loop unrolling if possible else fail? Thanks</p>
+<blockquote>
+	<p>In many systems, the registers, including the program counter, get pushed 
+	onto<br>
+	the user stack. For a thread switch, the system can then just save the stack<br>
+	pointer in a per-thread structure, restore the stack pointer of the new 
+	thread<br>
+	and pop off all the registers including the PC (possibly with an IRET<br>
+	instruction).<br>
+	<br>
+	For a process switch, after the registers are saved, a new page table is<br>
+	loaded (into the cr3 register on iA32) and the processor switches to a whole<br>
+	new virtual address space.<br>
+&nbsp;</p>
+</blockquote>

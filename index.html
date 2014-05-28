@@ -1,0 +1,252 @@
+<html> 
+	<head> 
+		<title>Advanced Computer Archiecture</title>
+
+		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<style>
+			body {
+				padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+			}
+		</style>
+
+	</head> 
+	<body> 
+
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="brand" href="#">Advanced Denis</a>
+					<div class="nav-collapse collapse">
+						<ul class="nav">
+							<!-- <li class="active"><a href="#">Home</a></li>
+							<li><a href="#about">About</a></li>
+							<li><a href="#contact">Contact</a></li> -->
+						</ul>
+					</div><!--/.nav-collapse -->
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+
+			<h1>Advanced Computer Architecture</h1>
+			<p>Welcome to the alternative notes page for <a href="https://secure.ecs.soton.ac.uk/notes/elec3020/">ELEC3020</a>. 
+			This page is a vain attempt to produce something that is a bit easier to revise from.</p>
+
+			<h2>Lecture slides</h2> 
+			<p>Denis provided us with PPTs &ndash; this angers me; so I stuck up these PDFs.</p>
+			<p><strong>I think that the references are probably as important as the slides!</strong></p>
+			<ul>
+				<li>Week 1:
+				<ul>
+					<li> <a href="slides/L01P01_Intro.pdf">Introduction </a> <br />
+					Gives a brief overview of the course; Some administrative content. In
+					lecture there was also discussion of Quantum Computing: mention of
+					factorisation algorithms for RSA decryption and solid state NMR quantum
+					computers.
+					</li>
+
+					<li><a href="slides/L01P02_History.pdf">Early history</a> <br />
+					Talks about the classical history of computers stuff. Manchester Mk II and
+					pals. Seems to take a very British view of the World (I don't know how
+					realistic this way of looking at stuff is). 
+					</li>
+
+					<li><a href="slides/L01P03_BusEquation.pdf">Bus stuff</a> <br />
+					A few slides about buses and their disadvantages. With mention of the need
+					for proper termination.  Difficulties with termination, with maintaining a
+					constant impedance on the bus and with excessive capacitive loading by bus
+					cards can make bus turn-around rather slow.
+					</li>
+				</ul>
+				</li>
+
+				<li>Week 2: <ul>
+					<li> <a href="slides/L02P01_MoreHistory.pdf">More Recent History</a> <br />
+					Takes us from the 360 to the modern PC.
+					</li>
+
+					<li><a href="slides/L02P02_IA32_386.pdf">Early iA32 processors</a> <br />
+					Chats a little bit about the early x86 processors. Looks depth first. 
+					</li>
+				</ul>
+				</li>
+
+				<li>Week 3:<ul>
+					<li><a href="slides/L03P01_Pipelining.pdf">Pipelining</a> <br />
+					Slides from MIT, talk about pipelining. Seem to be generally very
+					low-level: clocks and other things at that level.
+					<br />	
+					Apparently, we spent some time discussing low-level hardware issues,
+					including a simple sound driver, and CMOS latch-up.
+					</li>
+
+					<li><a href="slides/L03P02_PipelineLatches.pdf">Pipeline latching</a> <br />
+					We looked at a bit of pipeline latching. Got a pair of pretty logic gate
+					diagrams. I bet the Elecs love this stuff. </li>
+					</li>
+
+					<li>
+					<a href="slides/L03P03_MemoryHierarchy.pdf">Memory Hierarchy</a> <br />
+					Not sure if this is the right slide set, but it looks relevant, talks about
+					caching mainly. (Was a broken link on Denis' page) 
+					</li>
+
+					<li>
+					<a href="slides/L03P04_Cache.pdf">Cache</a> <br />
+					Seems to also talk mostly about caches, may well be very similar to the one
+					above; Having looked briefly I believe it to be the same material, but less
+					comical. :(
+					</li>
+
+					<li><a href="w3_refs.html"><i>References</i></a></li>
+				</ul>
+				</li>
+
+				<li>Week 4:<ul>
+					<li><a href="slides/L04P01_Superscalar.pdf">Superscalar Processing</a> <br />
+					Talks about instruction level parallelism employed on most modern processors. 
+					</li>
+
+					<li>ARM lecture - Does this exist? I cannot find it :/</li>
+
+					<li><a href="slides/L04P02_PentiumPro.pdf">The Pentium and Pentium Pro</a> <br /> 
+					Talks about the Pentium and Pentium Pro Processors mainly about features
+					such as superscalar execution, pipelining and branch prediction. 
+					</li>
+
+					<li><a href="slides/L04P03_PentiumBranchPrediction.pdf">Pentium Branch Prediction</a> <br /> 
+					Disscusses the branch prediction techniques used in the Pentium family of processors.
+					</li>
+
+					<li><a href="w4_refs.html"><i>References</i></a></li>
+				</ul>
+				</li>
+
+				<li>Week 5:
+				<ul>
+					<li><a href="slides/L05P01_Pentium4.pdf">The Pentium 4</a> <br />
+					A very quick an superficial look at the architecture of a "modern" processor,
+					as an example of recent over complexification.
+					</li>
+
+					<li><a href="w5_refs.html"><i>References</i></a></li>
+				</ul>
+				</li>
+
+				<li>Week 6:
+				<ul>
+					<li><a href="slides/L06P01_Buses.pdf">Buses</a> <br />
+					Fairly long slide set on Buses: What they are, why they are good, why they
+					suck and how they work.
+					</li>
+
+					<li><a href="w6_refs.html"><i>References</i></a></li>
+				</ul>
+
+				<li style="color: red; font-weight: bold">Week 7: <ul><li>Novel Architectures - Now defunct!</li></ul></li>
+
+				<li>Week 8: (Possibly defunct)<ul>
+					<li><a href="slides/L08P01_vliw.pdf">VLIW (Very Long Instruction Word) Introduction</a> <br />
+					Not totally sure that we ever actually did this stuff... It's a very old slide set, seems to give a general idea of what VLIW is.
+					</li>
+
+					<li>
+					<a href="slides/L08P02_ia64.pdf">iA64</a> <br />
+					A set of lecture slides from Virginia about Intel's Itanium architecture.
+					</li>
+
+					<li><a href ="slides/L08P03_Tera.pdf">Latency Hiding</a> <br />
+					Some discussion of HEP and Tera.
+					</li>
+				</ul>
+
+				<li style="color: red; font-weight: bold">Week 9 & 10: <ul><li>Networky stuff - Now defunct!</li></ul></li>
+				
+				<li>Week 11: New architectures and processors<ul>
+					<li><a href="slides/L11P01_IA32Devel.pdf">iA32 developments</a> <br />
+					The legacy 8087 stack-based floating point operations of the older iA32
+					processors are being superseded by SIMD operations on 16 byte registers
+					in the SSE (Streaming SIMD Extensions) and SSE2 instructions introduced
+					in the Pentium III and Pentium 4. SSE2 will operate on blocks of four
+					floats, two doubles, or sixteen bytes worth of any integer type and also
+					offer <i>prefetch </i>and other instructions for cache control.
+					
+					<li><a href="w11_refs.html"><i>References</i></a></li>		
+				</ul>
+				</li>
+			</ul>
+
+			<h2>Sotonpedia</h2>
+			<p>Oly Bills produced some notes <a href="sotonpedia">here</a>.</p>
+			<p>He also produced notes for the first year course, 
+			<a href="http://sotonpedia.com/index.php/COMP1006">here</a></p>
+
+
+			<h2>Recorded lectures</h2> 
+			<p>Not entirely relevent, but might be good to listen to this stuff while
+			walking:</p> 
+			<ul> 
+				<li><a href ="recordings/2010">2010/11</a></li> 
+				<li><a href ="recordings/2009">2009/10</a></li> 
+			</ul>
+
+
+			<h2>Lectures from other Universities</h2>
+			<ul>
+				<li>Berkeley&#39;s <i>
+					<a href="http://www-inst.eecs.berkeley.edu/~cs252/fa07/calendar.html">
+						Graduate Computer Architecture</a></i> (CS252)
+				</li>
+
+				<li>Carnegie Mellon&#39;s <i>
+					<a href="http://www.cs.cmu.edu/afs/cs.cmu.edu/academic/class/15740-f00/public/lectures/">
+						Performance &amp; Technology</a></i> (CS740)
+				</li>
+
+				<li>MIT&#39;s <i><a href="http://csg.csail.mit.edu/6.823/lecnotes.html">Computer 
+						System Architecture</a></i> (6.823)
+				</li>
+
+				<li>Stanford&#39;s <i><a href="http://www.stanford.edu/class/ee382a/">Advanced 
+						Processor Architecture</a></i> (E382A)
+				</li>
+			</ul>
+
+
+			<h2>Labwork</h2>
+			<p>We didn't actually do any labwork, but it might be worth having a look at what
+			they did do. The labwork description is <a href="labwork/el318_laboratory.htm">here</a>.</p>
+
+
+			<h2>Reading</h2>
+			<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+				<tr>
+					<td width="18%">
+						<img src="mpd.jpg" width="133" height="163"></td>
+					<td width="82%">If you can find a copy of this book, read <i>
+							<a href="http://www.mhhe.com/shen">Modern Processor Design</a></i> by J P Shen 
+						and M H Lipasti, pub McGraw Hill 2003, ISBN 0-07-282968-0 or 0-07-123007-6. 
+					</td>
+				</tr>
+			</table>
+			<p> <A href="http://www.ecs.soton.ac.uk/~bim/notes/aca">Ian McNally&#39;s old notes.</A>
+			</p>
+
+
+
+			<hr />
+			©&nbsp; 2000–2008 Denis A Nicole and the University of Southampton <A HREF="mailto:dan@ecs.soton.ac.uk">
+				dan@ecs.soton.ac.uk</A>.
+			<br />
+			Revised by Edward JF Seabrook May 2013. <a href="mailto:ejfs1g10+null@ecs.soton.ac.uk">ejfs1g10@ecs.soton.ac.uk</a> 
+		</div>
+
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+	</body>
+</html>

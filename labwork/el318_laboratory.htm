@@ -1,0 +1,289 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-gb">
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+<title>ELEC3020 Laboratory</title>
+<STYLE TYPE="text/css">
+<!--
+BODY {
+ font-family: Georgia;
+ line-height: 1.3}
+H1, H2, H3, H4, H5, H6 {
+ font-family: Verdana;
+ page-break-after: avoid;
+}
+TR {
+ page-break-inside: avoid;
+}
+OL, UL {
+ margin-top: 0;
+ margin-bottom: 0;
+ }
+-->
+</STYLE>
+
+</head>
+
+<body background bgcolor="#FFFFFF" text="#000000" link="#800000" vlink="#990000" alink="#666666">
+
+<h1 align="center">ELEC3020 Laboratory<br>
+2011</h1>
+<p>This is a simple exercise to evaluate the effectiveness of the various cache 
+improvements to the iA32 architecture through the <b>386, 486, Pentium, Pentium Pro 
+and P4</b> architectures. You will need access to a Linux PC to perform the 
+experiments; the cachegrind cache simulator relies on the ELF binary format. </p>
+<p>We have chosen to use valgrind (cachegrind) because it is an important piece 
+of software in its own right and something to which you should be exposed. The 
+experiments should work well with <a href="http://valgrind.org/">an up-to-date 
+version of Valgrind</a> but I have also provided a local copy of version 3.4.1 
+and a patch for this version.</p>
+<ol>
+  <li>The standard version of cachegrind does not let you set the size of caches 
+	to zero, so I have created a patch.<br>
+	If valgrind is not installed on your PC,  or if you need to use zero size 
+	caches, compile either the up-to-date version 
+  from <a href="http://valgrind.org/">the distribution site</a>&nbsp; or&nbsp;
+  <a href="valgrind-3.4.1.tar.bz2">version 3.4.1</a> patched
+	<a href="cachegrind.diff">with this patch</a>. If you are not superuser, you will need to 
+  configure the binaries to install in your personal directory (replace &quot;<tt>myhome</tt>&quot; 
+	with your user ID): something like<br>
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tar xvfj
+	<a href="valgrind-3.4.1.tar.bz2">valgrind-3.4.1.tar.bz2</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cd valgrind-3.4.1/cachegrind<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; patch -p1 &lt; ../../<a href="cachegrind.diff">cachegrind.diff</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cd ..<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ./configure --prefix=/home/myhome/valgrind<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; make<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; make install<br>
+  </tt><br>you can then try to test it with, say, <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cd /home/myhome/valgrind<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bin/valgrind --tool=cachegrind ls -l<br>&nbsp;</tt></li>
+  <li>By default, cachegrind sets the cache architecture to that of the host 
+  processor. Use the <a href="sizes.html">lecture notes or other sources</a> to find the cache layouts and miss costs for 
+  the five Intel versions listed above, so that you can enter them on the cachegrind command line. You will also later need the cache miss costs. 
+  The <a href="http://valgrind.org/docs/manual/cg-manual.html">manual pages for cachegrind</a> are on the main valgrind web site. Can you 
+	also try out the Opteron cache architecture? It is also possible to use the
+	<a href="cacti.5.3.rev.174.tar.gz">CACTI cache simulator</a> to
+	<a href="CACTI_5.1.pdf">model the speed and cost</a> of a variety of cache 
+	designs.<br>
+&nbsp;</li>
+	<li>Write a simple <i>strided</i> vector sum program and manipulate the 
+	strides and offsets to see the impact of cache line sizes and aliasing. Try 
+	to use scripts to automate your work and plot appropriate graphs. Something 
+	like:<br>
+	<tt>&nbsp; void vec_add(void) {<br>
+&nbsp;&nbsp;&nbsp; float *lhs = big_array;<br>
+&nbsp;&nbsp;&nbsp; float *op1 = big_array + LENGTH*STRIDE+OFFSET;<br>
+&nbsp;&nbsp;&nbsp; float *op2 = op1 + LENGTH*STRIDE+OFFSET;<br>
+&nbsp;&nbsp;&nbsp; int i = 0;<br>
+&nbsp;&nbsp;&nbsp; int limit = LENGTH*STRIDE;<br>
+&nbsp;&nbsp;&nbsp; while (i&lt;limit) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lhs[i] = op1[i] + op2[i];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; i = i + STRIDE;<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp; }<br>
+	</tt>Use various levels of
+	<a href="http://gcc.gnu.org/onlinedocs/gcc-4.4.0/gcc/Optimize-Options.html#Optimize-Options"><tt>gcc </tt>
+	optimisation</a> and use the
+	<a href="http://gcc.gnu.org/onlinedocs/gcc-4.4.0/gcc/Overall-Options.html#index-S-75"><tt>gcc -S</tt> 
+	option</a> to check the generated code is as you expect. <br>
+	On my system, if I compile using RedHat gcc 4.1.2-42 with<tt> <br>
+&nbsp; gcc -O3 -S -masm=intel <a href="sum_test.c">sum_test.c</a></tt> <br>
+	then the inner loop of <tt>vec_add </tt>in <a href="sum_test.s">sum_test.s</a> 
+	looks like:<br>
+&nbsp;<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .p2align 4,,7<br>&nbsp;&nbsp;.L4:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fld DWORD PTR [%esi+%eax*4]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fadd DWORD PTR [%ebx+%eax*4]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fstp DWORD PTR [%ecx+%eax*4]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add %eax, %edi<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cmp %edx, %eax<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jg .L4</tt><br>
+	which is just what you would expect. For a more extreme example
+	<a href="optimize.htm">look here</a>.<br>
+	<br>
+	&nbsp;How&nbsp; are the SSEs used? In this case, they are not used at all.<br>
+	&nbsp;<br>
+	We can now feed this calculation to our 486 simulator:<br>
+	<tt>&nbsp; bin/valgrind --tool=cachegrind --I1=0,1,1 --D1=0,1,1 --L2=16384,4,16 ./sum_test 
+4096 1 0&nbsp;&nbsp; 2&gt;&amp;1 | grep &quot;L2 miss rate&quot;<br>
+	</tt>and we get the response<br>
+	<tt>&nbsp; ==1209== L2 miss rate: 3.8% ( 3.5% + 6.8% )<br>
+	</tt><br>
+	Note that here we are using <tt>grep </tt>to pick out the line of output we 
+	want. If we want to plot a graph, we could bundle things up into a <tt>bash </tt>
+	script something like this:<br>
+	<tt>&nbsp;&nbsp; #!/bin/bash<br>
+&nbsp;&nbsp; for i in {1..8}<br>
+&nbsp;&nbsp;&nbsp;&nbsp; do echo -n $i , &gt;&gt;out<br>
+&nbsp;&nbsp;&nbsp;&nbsp; bin/valgrind --tool=cachegrind --I1=0,1,1 --D1=0,1,1 
+--L2=16384,4,16 ./sum_test 4096 $i 0 2&gt;&amp;1 | awk &#39;/L2 miss rate/{print $5}&#39; &gt;&gt; 
+out<br>
+&nbsp;&nbsp;&nbsp;&nbsp; done<br>
+	</tt>and we get an <tt>out </tt>file containing<br>
+	<tt>&nbsp; 1 ,3.8%<br>
+&nbsp; 2 ,4.9%<br>
+&nbsp; 3 ,5.9%<br>
+&nbsp; 4 ,7.0%<br>
+&nbsp; 5 ,7.0%<br>
+&nbsp; 6 ,7.0%<br>
+&nbsp; 7 ,7.0%<br>
+&nbsp; 8 ,7.0%<br>
+	</tt>which we can easily, as it's a <tt>.csv </tt>file,&nbsp; turn into a 
+	graph using Excel<br>
+	If we change the stride to 2 with <br><tt>&nbsp; ./sum_test 
+4096 2 0</tt><br>the overall miss rate rises to 4.9%. Why is this happening? Is there a 
+	general pattern here?<br>&nbsp;</li>
+	<li>What happens if we do a much bigger calculation? Try <br>
+	<tt>&nbsp; ./sum_test 4194304 1 0</tt><br>
+	and the overall miss rate rises to 8.2%. Or, plotted as a table,<br>
+	<tt>&nbsp;&nbsp; for i in {1..24}; do echo -n $((1&lt;&lt;i)) , ; bin/valgrind --tool=cachegrind 
+--I1=0,1,1 --D1=0,1,1 --L2=16384,4,16 ./sum_test $((1&lt;&lt;i)) 1 0 2&gt;&amp;1 | awk &#39;/L2 
+miss rate/{print $5}&#39;; done<br>
+&nbsp;2 ,3.1%<br>
+&nbsp;4 ,3.4%<br>
+&nbsp;8 ,3.1%<br>
+&nbsp;16 ,3.1%<br>
+&nbsp;32 ,3.1%<br>
+&nbsp;64 ,3.1%<br>
+&nbsp;128 ,3.1%<br>
+&nbsp;256 ,3.4%<br>
+&nbsp;512 ,3.2%<br>
+&nbsp;1024 ,3.3%<br>
+&nbsp;2048 ,3.5%<br>
+&nbsp;4096 ,3.8%<br>
+&nbsp;8192 ,4.3%<br>
+&nbsp;16384 ,5.0%<br>
+&nbsp;32768 ,5.9%<br>
+&nbsp;65536 ,6.8%<br>
+&nbsp;131072 ,7.4%<br>
+&nbsp;262144 ,7.8%<br>
+&nbsp;524288 ,8.0%<br>
+&nbsp;1048576 ,8.2%<br>
+&nbsp;2097152 ,8.2%<br>
+&nbsp;4194304 ,8.2%<br>
+&nbsp;8388608 ,8.3%<br>
+&nbsp;16777216 ,8.3%<br>
+	</tt><br>If,. however, we model a direct-mapped cache (<tt>--L2=16384,1,16</tt>) then 
+	things get much worse, with an overall miss rate of 33%. <br>
+	<br>
+	<tt>&nbsp;&nbsp; for i in {1..24}; do echo -n $((1&lt;&lt;i)) , ; bin/valgrind --tool=cachegrind 
+--I1=0,1,1 --D1=0,1,1 --L2=16384,1,16 ./sum_test $((1&lt;&lt;i)) 1 0 2&gt;&amp;1 | awk &#39;/L2 
+miss rate/{print $5}&#39;; done<br>
+&nbsp;2 ,5.3%<br>
+&nbsp;4 ,4.6%<br>
+&nbsp;8 ,4.6%<br>
+&nbsp;16 ,4.2%<br>
+&nbsp;32 ,3.9%<br>
+&nbsp;64 ,4.5%<br>
+&nbsp;128 ,4.7%<br>
+&nbsp;256 ,5.3%<br>
+&nbsp;512 ,4.6%<br>
+&nbsp;1024 ,5.4%<br>
+&nbsp;2048 ,5.6%<br>
+&nbsp;4096 ,8.3%<br>
+&nbsp;8192 ,11.1%<br>
+&nbsp;16384 ,15.3%<br>
+&nbsp;32768 ,20.2%<br>
+&nbsp;65536 ,25.0%<br>
+&nbsp;131072 ,28.3%<br>
+&nbsp;262144 ,30.6%<br>
+&nbsp;524288 ,31.8%<br>
+&nbsp;1048576 ,32.5%<br>
+&nbsp;2097152 ,33.0%<br>
+&nbsp;4194304 ,33.1%<br>
+&nbsp;8388608 ,33.2%<br>
+&nbsp;16777216 ,33.3%<br>
+	</tt><br>We can solve the problem by introducing an offset;<br><tt>&nbsp; ./sum_test 4194304 1 4</tt><br>only has a total miss rate of 8.4% even with the direct mapped cache. What's 
+	going on?<br>
+	<br>
+	<tt>&nbsp; for i in {1..24}; do echo -n $((1&lt;&lt;i)) , ; bin/valgrind 
+--tool=cachegrind --I1=0,1,1 --D1=0,1,1 --L2=16384,1,16 ./sum_test $((1&lt;&lt;i)) 1 4 
+2&gt;&amp;1 | awk &#39;/L2 miss rate/{print $5}&#39;; done<br>
+&nbsp;2 ,4.7%<br>
+&nbsp;4 ,4.5%<br>
+&nbsp;8 ,5.3%<br>
+&nbsp;16 ,4.6%<br>
+&nbsp;32 ,5.3%<br>
+&nbsp;64 ,5.3%<br>
+&nbsp;128 ,4.5%<br>
+&nbsp;256 ,4.7%<br>
+&nbsp;512 ,5.3%<br>
+&nbsp;1024 ,4.8%<br>
+&nbsp;2048 ,4.8%<br>
+&nbsp;4096 ,4.6%<br>
+&nbsp;8192 ,5.4%<br>
+&nbsp;16384 ,6.0%<br>
+&nbsp;32768 ,7.0%<br>
+&nbsp;65536 ,7.3%<br>
+&nbsp;131072 ,7.7%<br>
+&nbsp;262144 ,8.1%<br>
+&nbsp;524288 ,8.2%<br>
+&nbsp;1048576 ,8.3%<br>
+&nbsp;2097152 ,8.3%<br>
+&nbsp;4194304 ,8.4%<br>
+&nbsp;8388608 ,8.4%<br>
+&nbsp;16777216 ,8.4%<br>
+	</tt><br>As an alternative to the handmade code, you might try using RINF1 from the
+	<a href="PBLL2.2.tgz">Parkbench</a> suite.<br>&nbsp;</li>
+	<li>Run   cachegrind (<font face="Courier">valgrind --tool=cachegrind</font>)&nbsp; 
+	on versions of your code on each cache architecture. Try to plot some 
+	interesting graphs.<br>&nbsp;</li>
+	<li>Compile the three benchmarks <a href="dhry-c.sh">Dhrystone</a>,
+  	<a href="livermore.c">Livermore-loops</a> and <a href="linpack.c">LINPACK</a> 
+  using an appropriate level of optimisation. These are the most popular 
+  standard FORTRAN computation benchmarks, but translations into C are used for 
+  this exercise. You may need to make small changes to the code for portability. 
+  When you get it to run, compile it will optimisation&nbsp; turned on, <tt>gcc -O3.</tt>There are lots of additional optimisations you can try out.<br>&nbsp;</tt></li>
+	<li>Run cachegrind (<font face="Courier">valgrind --tool=cachegrind</font>)&nbsp; 
+  on each benchmark on each cache architecture.<br>&nbsp;</li>
+	<li>Using the cachegrind output, calculate the cost of cache misses for some 
+  sample cases.<br>&nbsp;</li>
+	<li>Try to understand your results.<br>&nbsp;</li>
+	<li>Try out the two 
+	<a href="http://developer.amd.com/documentation/articles/Pages/111820052.aspx">example 
+	versions of matrix multiply</a> from AMD and see if your simulation 
+	reproduces these results.<br>&nbsp;</li>
+	<li>Can you find or create examples of aliasing problems in the Opteron L1 
+	D-cache?</li>
+</ol>
+<p>The software you will need:</p>
+<ul>
+	<li>The
+    <a href="http://valgrind.org">valgrind</a> cache (amongst 
+    other things) simulator and a <a href="valgrind-3.4.1.tar.bz2">local copy</a> of 
+	an older version.</li>
+	<li><a href="http://kcachegrind.sourceforge.net/cgi-bin/show.cgi">
+	KCachegrind</a> is a useful visualisation tool for Valgrind output:
+	<a href="kcachegrind-0.4.6.tgz">local copy</a>.<br>
+&nbsp;</li>
+	<li>The RINF1 benchmark, good for looking at strided operations, is in the
+	<a href="PBLL2.2.tgz">Parkbench suite</a>.<br>
+&nbsp;</li>
+	<li>The
+    <a href="dhry-c.sh">Dhrystone</a> benchmark; build with<br>
+	<tt>&nbsp;&nbsp;&nbsp; sh &lt; dhry-c.sh<br>
+&nbsp;&nbsp;&nbsp; gcc -o dhry -DTIME dhry_1.c dhry_2.c -lm<br>
+&nbsp;</tt></li>
+	<li>The
+    <a href="cloops.tar.gz">Livermore-loops</a> benchmark; this builds under 
+    linux using<br>
+    <tt>&nbsp;&nbsp;&nbsp; ./configure -cpu=linux mflops<br>
+&nbsp;&nbsp;&nbsp;
+make clean<br>
+&nbsp;&nbsp;&nbsp;
+make<br>
+&nbsp;</tt></li>
+	<li>The
+    <a href="linpack.c">LINPACK</a> benchmark; build with<br>
+&nbsp;&nbsp;&nbsp; <tt>gcc -o linpack -DSP -DROLL linpack.c -lm</tt><br>
+    you can also try <tt>DP </tt>instead of <tt>SP </tt>and <tt>UNROLL </tt>
+    instead of <tt>ROLL</tt>.</li>
+</ul>
+<HR>
+<SCRIPT>
+function p2(x) {
+  if (x<10) return '0' + x.toString();
+  else return x.toString();
+}
+var d = Date.parse(document.lastModified);
+if (d != 0) {
+   var now = new Date(d);
+   document.write('Last modified: ' + now.getFullYear() + 
+         '-' + p2(now.getMonth()+1) + '-' + p2(now.getDate()) + '.<br>');
+}
+</SCRIPT>
+<A HREF="mailto:dan@ecs.soton.ac.uk">dan@ecs.soton.ac.uk</A> 
+
+</body>
+
+</html>
